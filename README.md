@@ -31,25 +31,25 @@ gcloud services enable cloudbuild.googleapis.com
 Before deploying your app, you need to build the Docker image and push it to Google Container Registry (GCR) or Artifact Registry.
 
 1. **Authenticate with Google Cloud**:
-   ```bash
-   gcloud auth login
-   ```
+```bash
+gcloud auth login
+```
 
 2. **Set the project ID** (replace `your-project-id` with your actual project ID):
-   ```bash
-   gcloud config set project your-project-id
+```bash
+gcloud config set project your-project-id
 
-   gcloud config set project serverless-python-flight-bot
+gcloud config set project serverless-python-flight-bot
 
-   ```
+```
 
 3. **Build the Docker image**:
    From the root of your project directory (where the `Dockerfile` is located), run the following command:
-   ```bash
-   gcloud builds submit --tag gcr.io/your-project-id/your-image-name .
+```bash
+gcloud builds submit --tag gcr.io/your-project-id/your-image-name .
 
-   gcloud builds submit --tag gcr.io/serverless-python-flight-bot/bot .
-   ```
+gcloud builds submit --tag gcr.io/serverless-python-flight-bot/bot .
+```
 
    This will build your Docker image and push it to Google Container Registry (`gcr.io`).
 
@@ -58,29 +58,31 @@ Before deploying your app, you need to build the Docker image and push it to Goo
 Once your image is in Container Registry, you can deploy it to Cloud Run.
 
 1. **Deploy the image** to Cloud Run:
-   ```bash
-   gcloud run deploy your-service-name \
-     --image gcr.io/your-project-id/your-image-name \
-     --platform managed \
-     --region europe-west1 \
-     --allow-unauthenticated \
-     --set-env-vars API_KEY=your_api_key,API_HOST=your_api_host,TELEGRAM_TOKEN=your_telegram_token
+```bash
+gcloud run deploy your-service-name \
+    --image gcr.io/your-project-id/your-image-name \
+    --platform managed \
+    --region europe-west1 \
+    --allow-unauthenticated \
+    --set-env-vars API_KEY=your_api_key,API_HOST=your_api_host,TELEGRAM_TOKEN=your_telegram_token
 
 
 
-    gcloud run deploy your-service-name --image gcr.io/serverless-python-flight-bot/bot:latest --platform managed --region europe-west1 --allow-unauthenticated --set-env-vars API_KEY=your_api_key,API_HOST=your_api_host,TELEGRAM_TOKEN=your_telegram_token
+gcloud run deploy your-service-name --image gcr.io/serverless-python-flight-bot/bot:latest --platform managed --region europe-west1 --allow-unauthenticated --set-env-vars API_KEY= ,API_HOST=sky-scanner3.p.rapidapi.com,TELEGRAM_TOKEN= 
 
-   ```
+```
 
    - Replace `your-service-name` with the name you want to give your Cloud Run service.
    - Replace `your-image-name` with the name of your Docker image in GCR.
-   - You can change the region (`us-central1`) to the one that is closest to you.
+   - You can change the region (`europe-west1`) to the one that is closest to you.
 
 2. After the deployment, Cloud Run will provide you with a URL where your application is hosted.
 
 
-```
-curl "https://api.telegram.org/bot<TELEGRAM_TOKEN>/setWebhook?url=<URL>"
+```bash
+curl "https://flight-bot-{{RANDOMID}}.europe-west1.run.app/"
+
+curl "https://flight-bot-{{RANDOMID}}.europe-west1.run.app/start"
 
 ```
 
