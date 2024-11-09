@@ -1,29 +1,17 @@
-from datetime import datetime
-import http.client
-import json
-import os
-import logging
 from telegram import Update
 from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler
-import asyncio
-from dotenv import load_dotenv
+from fastapi import FastAPI
+from datetime import datetime
+import http.client
 
-load_dotenv()
+import os
 
-API_KEY = os.getenv('API_KEY')
-API_HOST = os.getenv('API_HOST')
+app = FastAPI()
+conn = http.client.HTTPSConnection(os.getenv('API_HOST'))
 
-logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    level=logging.INFO
-)
-
-conn = http.client.HTTPSConnection(API_HOST)
-
-headers = {
-    'x-rapidapi-key': API_KEY,
-    'x-rapidapi-host': API_HOST
-}
+@app.get("/")
+def root():
+    return {"message": "This is the bot server running"}
 
 def scrape_website(DEPARTURE, ARRIVAL):
     current_date = datetime.today().strftime('%Y-%m-%d')
@@ -58,7 +46,7 @@ async def get_flights(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(f"Here are the top 3 cheapest flights:\n{flight_details}")
 
-def main():
+def run_bot():
     application = ApplicationBuilder().token(os.getenv('TELEGRAM_TOKEN')).build()
 
     start_handler = CommandHandler('start', start)
@@ -70,4 +58,10 @@ def main():
     application.run_polling()
 
 if __name__ == '__main__':
-    main()
+    import threading
+    # Run the Telegram bot in a separate thread
+    bot_thread = threading.Thread(target=run_bot)
+    bot_thread.start()
+
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))

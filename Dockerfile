@@ -1,4 +1,3 @@
-# Use the official Python image from Docker Hub
 FROM python:3.9-slim
 
 # Set the working directory inside the container
@@ -13,8 +12,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the entire project to the container
 COPY . /app/
 
-# Expose the port the app will run on (default for FastAPI/Flask is 8080)
+# Expose the port the app will run on (default for FastAPI is 8080)
 EXPOSE 8080
 
-# Define the entrypoint for your container to run the app
+# Command to run the bot and the FastAPI server
 CMD ["python", "main.py"]
