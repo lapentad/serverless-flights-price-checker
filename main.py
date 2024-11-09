@@ -3,11 +3,17 @@ from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler
 from fastapi import FastAPI
 from datetime import datetime
 import http.client
+import json
 
 import os
 
 app = FastAPI()
 conn = http.client.HTTPSConnection(os.getenv('API_HOST'))
+
+headers = {
+    'x-rapidapi-key':os.getenv('API_KEY'),
+    'x-rapidapi-host': os.getenv('API_HOST')
+}
 
 @app.get("/")
 def root():
