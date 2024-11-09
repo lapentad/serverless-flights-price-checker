@@ -9,13 +9,6 @@ TELEGRAM_TOKEN=<TELEGRAM_TOKEN>
 
 TDB
 
-## DEPLOY in GCP Function
-```
-export API_KEY=<API_KEY>
-export TELEGRAM_TOKEN=<TELEGRAM_TOKEN>
-gcloud beta functions deploy webhook --set-env-vars "API_KEY=$API_KEY>,API_HOST=sky-scanner3.p.rapidapi.com,TELEGRAM_TOKEN=$TELEGRAM_TOKEN" --runtime python39 --trigger-http
-```
-
 To deploy this Python application on Google Cloud Run, you'll need to create a Docker container for your application and then deploy it to Cloud Run. I'll guide you through the steps:
 
 ### Enable Google Cloud APIs
@@ -45,12 +38,17 @@ Before deploying your app, you need to build the Docker image and push it to Goo
 2. **Set the project ID** (replace `your-project-id` with your actual project ID):
    ```bash
    gcloud config set project your-project-id
+
+   gcloud config set project serverless-python-flight-bot
+
    ```
 
 3. **Build the Docker image**:
    From the root of your project directory (where the `Dockerfile` is located), run the following command:
    ```bash
    gcloud builds submit --tag gcr.io/your-project-id/your-image-name .
+
+   gcloud builds submit --tag gcr.io/serverless-python-flight-bot/bot .
    ```
 
    This will build your Docker image and push it to Google Container Registry (`gcr.io`).
@@ -64,9 +62,14 @@ Once your image is in Container Registry, you can deploy it to Cloud Run.
    gcloud run deploy your-service-name \
      --image gcr.io/your-project-id/your-image-name \
      --platform managed \
-     --region us-central1 \
+     --region europe-west1 \
      --allow-unauthenticated \
      --set-env-vars API_KEY=your_api_key,API_HOST=your_api_host,TELEGRAM_TOKEN=your_telegram_token
+
+
+
+    gcloud run deploy your-service-name --image gcr.io/serverless-python-flight-bot/bot:latest --platform managed --region europe-west1 --allow-unauthenticated --set-env-vars API_KEY=your_api_key,API_HOST=your_api_host,TELEGRAM_TOKEN=your_telegram_token
+
    ```
 
    - Replace `your-service-name` with the name you want to give your Cloud Run service.
@@ -74,6 +77,12 @@ Once your image is in Container Registry, you can deploy it to Cloud Run.
    - You can change the region (`us-central1`) to the one that is closest to you.
 
 2. After the deployment, Cloud Run will provide you with a URL where your application is hosted.
+
+
+```
+curl "https://api.telegram.org/bot<TELEGRAM_TOKEN>/setWebhook?url=<URL>"
+
+```
 
 
 ### Test the Deployment
