@@ -1,0 +1,1 @@
+# serverless-flights-price-checker
