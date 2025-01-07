@@ -14,7 +14,7 @@ logging.basicConfig(
 )
 
 headers = {
-    'x-rapidapi-key': "40f496afedmsh78eba06b6b50a1ap123d38jsna3865a02a679",
+    'x-rapidapi-key': "$API_KEY",
     'x-rapidapi-host': "sky-scanner3.p.rapidapi.com"
 }
 
@@ -72,7 +72,7 @@ async def get_flights(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # Run the Telegram bot asynchronously
 async def run_telegram_bot():
-    application = ApplicationBuilder().token("7591640556:AAH5u6w5Y7-QRvdRn5b_eJ8KH6CNwxv5pLM").build()
+    application = ApplicationBuilder().token("$TELEGRAM_TOKEN").build()
     application.add_handler(CommandHandler('start', start))
     application.add_handler(CommandHandler('get', get_flights))
     await application.initialize()
